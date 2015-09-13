@@ -33,49 +33,46 @@ public class Combo{
       return list;    
   }
   
-  public int[] realList() throws IOException{
-      LinkedList<IntCounter> list = new LinkedList(); // list being returned
+  public int[] realList() throws IOException{ // creates array with occurences of number
       ArrayList<Integer> numbers = makeFullList(); // Full list of numbers
-      Integer nums[] = new Integer[numbers.size()];
-      nums = numbers.toArray(nums); //copies list into array for easier traversal
       int[] occurences = new int[60];
       int MAX = 59; // highest possible lottery number
       int count; // counts how many times 
-      int index;
-      IntCounter counted;
       
       for(int i = 0; i <= MAX; i++){
-          count = 0;
-          for(index = 0; index < nums.length; index++){
-              if(index == i)
-                  count++;
-          }
+        count = 0;
+        for(int x : numbers){
+            if(x == i)
+                count++;
+        }
           occurences[i] = count;
       }
       return occurences;
       }
-      /**
-       for(int i = 0; i <= MAX; i++){ // checks to see if number in array matches current number
-          count = 0;
-          index = 0;
-          while(index < nums.length){ // goes thru entire nums array
-             if(index == i){
-                 count++;
-                 index++;
-             }
-             else {
-                 index++;
-             }
-             }
-          counted = new IntCounter(i, count);
-          list.add(counted);
-    }
-    * **/
       
-  public void print()throws IOException{
+  public void printList()throws IOException{
      int[] list = realList();
      for(int i = 0; i < list.length; i++)
          System.out.println(list[i]);
+  }
+  
+  public int[] getCombo() throws IOException{
+      int[] combination = new int[5];
+      int[] list = realList();
+      int max = 0;
+      int number;
+      for(int index = 0; index < 5; index++){ // index of combination array
+        for(int i = 0; i < 60; i++){ //travels through list array one index at a time
+          if(list[i] >= max){ //if current number is greater than max
+              max = list[i];
+              number = i; //keeps track of index of highest number
+          }
+          
+      }
+        
+        
+        
+      }
   }
 }
 

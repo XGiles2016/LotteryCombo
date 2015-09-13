@@ -16,6 +16,6 @@ public class Main{
         System.out.println(go.getCombination(i));
         * */
         Combo combo = new Combo();
-        combo.print();
+        combo.printList();
 }
 }
