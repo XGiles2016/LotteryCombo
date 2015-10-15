@@ -6,17 +6,20 @@
 package Lottery;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Iterator;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+
 
 public class Combo{
-  //variables 
-   private int one,two,three,four,five,powerball;
    private Reader reader = new Reader("file.txt");
-   int[] combo;
-   //constructors
+   HashMap<Integer,Integer> map;
+   
+   
    public Combo() throws IOException{
-      int[] output = realList();
+      makeFullList();
    }
    
   public ArrayList makeFullList() throws IOException{
@@ -33,46 +36,78 @@ public class Combo{
       return list;    
   }
   
-  public int[] realList() throws IOException{ // creates array with occurences of number
+  public HashMap realList() throws IOException{ // creates array with occurences of number
       ArrayList<Integer> numbers = makeFullList(); // Full list of numbers
-      int[] occurences = new int[60];
-      int MAX = 59; // highest possible lottery number
-      int count; // counts how many times 
-      
-      for(int i = 0; i <= MAX; i++){
-        count = 0;
-        for(int x : numbers){
-            if(x == i)
+      int count;
+      map = new HashMap();
+      for(int currentNumber = 0; currentNumber < 60; currentNumber++){
+          count = 0;
+        for(int num : numbers){
+            if(num == currentNumber)
                 count++;
-        }
-          occurences[i] = count;
+        }     
+      map.put(currentNumber, count);
       }
-      return occurences;
+      return map;
+  }
+
+  public int[] twentyHighestNumbers()throws IOException{
+      HashMap<Integer,Integer> list = realList();
+      final int SIZE = 20;
+      int[] combination = new int[SIZE];
+      int index = 0;
+      while(index < SIZE){
+        
+      Map.Entry<Integer,Integer> maxEntry = null;
+      for(Map.Entry<Integer,Integer> entry : list.entrySet()){
+          if(maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0){
+            maxEntry = entry;  
+          }
       }
-      
-  public void printList()throws IOException{
-     int[] list = realList();
-     for(int i = 0; i < list.length; i++)
-         System.out.println(list[i]);
+      combination[index] = maxEntry.getKey();
+      list.remove(maxEntry.getKey());
+      index++;
+      }
+      Arrays.sort(combination);
+      return combination;
   }
   
-  public int[] getCombo() throws IOException{
-      int[] combination = new int[5];
-      int[] list = realList();
-      int max = 0;
-      int number;
-      for(int index = 0; index < 5; index++){ // index of combination array
-        for(int i = 0; i < 60; i++){ //travels through list array one index at a time
-          if(list[i] >= max){ //if current number is greater than max
-              max = list[i];
-              number = i; //keeps track of index of highest number
-          }
-          
+  public int[][] fiveCombos() throws IOException{
+      int[] twentyNums = this.twentyHighestNumbers();
+      int length = 5;
+      int width = 5;
+      int[][] combos = new int[length][width];
+      for(int i = 0; i < length; i++){
+          for(int j = 0; j < width; j++)
+              combos[i][j] = twentyNums[randomNumber()];
       }
-        
-        
-        
+      return combos;
+  }
+  
+  private int randomNumber(){
+      Random rand = new Random();
+      return rand.nextInt(20);
+      
+  }
+  
+  public void printCombination() throws IOException{
+      int[][] combination = this.fiveCombos();
+      for(int[] number : combination){
+          for(int num : number)
+            System.out.print(num + " ");
+          System.out.println();
       }
   }
+  
+  public void printList()throws IOException{
+     HashMap<Integer,Integer> list = realList();
+     for(Map.Entry<Integer,Integer> entry: map.entrySet()){
+         int key = entry.getKey();
+         int value = entry.getValue();
+         System.out.println(key + " " + value);
+     }
+      
+  }
+  
 }
 
